@@ -3,7 +3,6 @@ import os
 
 class Configuration(object):
     DEBUG = True
-
     #db settings
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     basedir = os.path.abspath(os.path.dirname(__file__))
