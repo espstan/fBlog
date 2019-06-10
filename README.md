@@ -14,9 +14,22 @@ source venv/bin/activate
 ```sh
 pip install flask
 ```
+Установка пакетов
+```sh
+pip install -r requirements.txt
+```
+
+
+
 
 #####Запись зависимостей в файл:
 ######из директории blog
 ```sh
 pip freeze > requirements.txt
+```
+
+
+установка sqlite
+```sh
+sudo apt-get install sqlite
 ```
