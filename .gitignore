@@ -108,3 +108,5 @@ venv.bak/
 
 #db
 migrations/
+
+blog.db
