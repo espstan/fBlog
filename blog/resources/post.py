@@ -46,3 +46,11 @@ class PostRegister(Resource):
 class PostList(Resource):
     def get(self):
         return {'posts': [post.get_json() for post in PostModel.query.all()]}
+
+
+class PostStatistics(Resource):
+    def get(self):
+        print(sum(1 for post in PostModel.query.all() if post.is_published))
+        return {'posts': len(list(PostModel.query.all())),
+                'published posts': sum(1 for post in PostModel.query.all() if post.is_published),
+                'drafts': sum(1 for post in PostModel.query.all() if not post.is_published)}
