@@ -37,6 +37,3 @@ def create_post():
         else:
             return jsonify({'message': 'len(title) > {}'.format(Configuration.MAX_TITLE_SIZE)})
     return jsonify({'message': 'your post has no title'})
-
-
-
