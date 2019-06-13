@@ -3,22 +3,33 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_migrate import MigrateCommand
 
-from flask_script import Manager
+from flask_restful import Api
 
-from flask_sqlalchemy import SQLAlchemy
+from flask_script import Manager
 
 from config import Configuration
 
+from resources.post import PostRegister
+from resources.post import PostList
 
 app = Flask(__name__)
-
 app.config.from_object(Configuration)
-db = SQLAlchemy(app)
+api = Api(app)
 
 
-migrate = Migrate(app, db)
-manager = Manager(app)
-manager.add_command('db', MigrateCommand)
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 
-from models import Post
+api.add_resource(PostRegister, '/post')
+api.add_resource(PostList, '/posts')
+
+if __name__ == '__main__':
+    from db import db
+    db.init_app(app)
+    migrate = Migrate(app, db)
+    manager = Manager(app)
+    manager.add_command('db', MigrateCommand)
+
+    app.run(port=1234, debug=True)
