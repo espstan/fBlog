@@ -18,10 +18,6 @@ class PostModel(db.Model):
         def __repr__(self):
             return "<Post id: {}, title: {}>".format(self.id, self.title)
 
-        # @classmethod
-        # def find_by_userid(cls, user_id):
-        #     return cls.query.filter_by(username=user_id).first()
-
         @classmethod
         def find_by_id(cls, _id):
             return cls.query.filter_by(id=_id).first()
