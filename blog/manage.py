@@ -1,4 +1,4 @@
-from app import manager
+from db import manager
 
 
 if __name__ == '__main__':

@@ -18,7 +18,7 @@ class PostModel(db.Model):
     id = db.Column(db.Integer,
                    primary_key=True)
 
-    title = db.Column(db.String(Configuration.MAX_TITLE_SIZE))
+    title = db.Column(db.String(Configuration.MAX_POST_TITLE_SIZE))
     body = db.Column(db.Text)
     user_id = db.Column(db.Integer,
                         nullable=False)

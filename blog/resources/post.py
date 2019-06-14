@@ -110,12 +110,6 @@ class Post(Resource):
 
 
 class PostList(Resource):
-    parser = reqparse.RequestParser()
-    parser.add_argument('id',
-                        type=int,
-                        required=True,
-                        help='This field cannot be blank.')
-
     def get(self):
         return {'posts': [post.get_json() for post in PostModel.query.all()]}
 
