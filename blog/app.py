@@ -9,6 +9,7 @@ from flask_script import Manager
 
 from config import Configuration
 
+from resources.post import Post
 from resources.post import PostList
 from resources.post import PostRegister
 from resources.post import PostStatistics
@@ -23,6 +24,7 @@ def create_tables():
     db.create_all()
 
 
+api.add_resource(Post, '/post/<_id>')
 api.add_resource(PostRegister, '/post')
 api.add_resource(PostList, '/posts')
 api.add_resource(PostStatistics, '/statistics')

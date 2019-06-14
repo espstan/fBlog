@@ -19,10 +19,6 @@ class PostModel(db.Model):
             return "<Post id: {}, title: {}>".format(self.id, self.title)
 
         @classmethod
-        def find_by_userid(cls, user_id):
-            return cls.query.filter_by(username=user_id).first()
-
-        @classmethod
         def find_by_id(cls, _id):
             return cls.query.filter_by(id=_id).first()
 
@@ -36,3 +32,7 @@ class PostModel(db.Model):
                     'body': self.body,
                     'is_published': self.is_published,
                     'user_id': self.user_id}
+
+        def delete_from_db(self):
+            db.session.delete(self)
+            db.session.commit()
