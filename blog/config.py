@@ -9,4 +9,6 @@ class Configuration(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'blog.db')
     # post_params
-    MAX_TITLE_SIZE = 140
+    MAX_POST_TITLE_SIZE = 140
+    MAX_TAG_NAME_SIZE = 40
+
