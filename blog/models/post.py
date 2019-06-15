@@ -6,6 +6,8 @@ from db import db
 
 from models.tag import TagModel
 
+from models.category import CategoryModel
+
 post_tags = db.Table('post_tags',
                      db.Column('post_id', db.Integer, db.ForeignKey('posts.id')),
                      db.Column('tag_id', db.Integer, db.ForeignKey(TagModel.id))
@@ -28,6 +30,9 @@ class PostModel(db.Model):
                            secondary=post_tags,
                            backref=db.backref('posts'),
                            lazy='dynamic')
+    category_id = db.Column('category_id',
+                            db.Integer,
+                            db.ForeignKey(CategoryModel.id))
 
     def __init__(self, *args, **kwargs):
         super(PostModel, self).__init__(*args, **kwargs)
