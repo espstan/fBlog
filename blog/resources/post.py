@@ -32,19 +32,14 @@ class PostRegister(Resource):
                         required=True,
                         help='This field cannot be blank.')
 
-    parser.add_argument('tags',
-                        type=list,
-                        required=True,
-                        help='This field cannot be blank.')
-
     def post(self):
         data = PostRegister.parser.parse_args()
-        if len(data['title']) > Configuration.MAX_TITLE_SIZE:
-            return {'message': 'A title\'s length is more than {}'.format(Configuration.MAX_TITLE_SIZE)}
+        if len(data['title']) > Configuration.MAX_POST_TITLE_SIZE:
+            return {'message': 'A title\'s length is more than {}'.format(Configuration.MAX_POST_TITLE_SIZE)}
 
-        for tag in data['tags']:
-            if tag.name not in TagModel.get_tags():
-                return {'message': 'A tag \'{}\' is unknown'.format(tag.name)}
+        # for tag in data['tags']:
+        #     if tag.name not in TagModel.get_tags():
+        #         return {'message': 'A tag \'{}\' is unknown'.format(tag.name)}
 
         new_post = PostModel(**data)
         try:
@@ -105,8 +100,10 @@ class Post(Resource):
             post.body = data['body']
             post.user_id = data['user_id']
             post.is_published = data['is_published']
+            post.tags = data('tags')
+
         post.save_to_db()
-        return item.json(), 200
+        return post.json(), 200
 
 
 class PostList(Resource):
