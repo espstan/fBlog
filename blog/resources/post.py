@@ -115,4 +115,4 @@ class PostStatistics(Resource):
     def get(self):
         return {'posts': PostModel.query.count(),
                 'published posts': PostModel.query.filter(PostModel.is_published).count(),
-                'drafts': PostModel.query.filter(not PostModel.is_published).count()}
+                'drafts': PostModel.query.filter(PostModel.is_published == False).count()}
