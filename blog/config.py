@@ -10,5 +10,7 @@ class Configuration(object):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'blog.db')
     # post_params
     MAX_POST_TITLE_SIZE = 140
+    # tag_params
     MAX_TAG_NAME_SIZE = 40
-
+    # category_params
+    MAX_CATEGORY_NAME_SIZE = 40
