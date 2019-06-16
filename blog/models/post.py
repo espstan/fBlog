@@ -54,8 +54,11 @@ class PostModel(db.Model):
                 'body': self.body,
                 'is_published': self.is_published,
                 'user_id': self.user_id,
-                # 'tags': self.tags,
+                'tags': self.get_tags(),
                 'category_id': self.category_id}
+
+    def get_tags(self):
+        return [tag.name for tag in self.tags]
 
     def delete_from_db(self):
         db.session.delete(self)
