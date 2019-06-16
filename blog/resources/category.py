@@ -25,3 +25,14 @@ class Category(Resource):
             err = str(e.__class__.__name__)
             return {'message': '{}'.format(err)}, 500
         return new_category.get_json(), 201
+
+    def delete(self, name):
+        category = CategoryModel.find_by_name(name)
+        if category:
+            try:
+                category.delete_from_db()
+            except SQLAlchemyError as e:
+                err = str(e.__class__.__name__)
+                return {'message': '{}'.format(err)}, 500
+            return {'message': 'Category was deleted'}
+        return {'message': 'Category with name={} was not found'.format(name)}
