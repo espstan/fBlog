@@ -4,6 +4,7 @@ from flask_restful import Api
 
 from config import Configuration
 
+from resources.category import Category
 from resources.post import Post
 from resources.post import PostList
 from resources.post import PostRegister
@@ -21,6 +22,7 @@ def create_tables():
     db.create_all()
 
 
+api.add_resource(Category, '/category/<string:name>')
 api.add_resource(Post, '/post/<int:_id>')
 api.add_resource(PostRegister, '/post')
 api.add_resource(PostList, '/posts')
