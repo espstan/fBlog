@@ -36,3 +36,8 @@ class Category(Resource):
                 return {'message': '{}'.format(err)}, 500
             return {'message': 'Category was deleted'}
         return {'message': 'Category with name={} was not found'.format(name)}
+
+
+class CategoryList(Resource):
+    def get(self):
+        return {'categories': [category.get_json() for category in CategoryModel.query.all()]}
