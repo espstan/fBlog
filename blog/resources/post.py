@@ -34,6 +34,12 @@ class PostRegister(Resource):
                         required=True,
                         help='This field cannot be blank.')
 
+    parser.add_argument('tags',
+                        type=str,
+                        action='append',
+                        required=True,
+                        help='This field cannot be blank.')
+
     parser.add_argument('category_id',
                         type=int,
                         required=True,
@@ -41,16 +47,31 @@ class PostRegister(Resource):
 
     def post(self):
         data = PostRegister.parser.parse_args()
+        tag_names = data['tags']
+        tags = []
+        for name in tag_names:
+            tag = TagModel.find_by_name(name)
+            if tag:
+                tags.append(tag)
+            else:
+                return {'message': 'There is no such tag: \'{}\''.format(name)}
+
         if len(data['title']) > Configuration.MAX_POST_TITLE_SIZE:
             return {'message': 'A title\'s length is more than {}'.format(Configuration.MAX_POST_TITLE_SIZE)}
+
         category = data['category_id']
         if not CM.query.filter(CM.id == category).first():
             return {'message': 'There is no such category: \'{}\''.format(category)}
-        # for tag in data['tags']:
-        #     if tag.name not in TagModel.get_tags():
-        #         return {'message': 'A tag \'{}\' is unknown'.format(tag.name)}
 
+        del data['tags']
         new_post = PostModel(**data)
+
+        for tag in set(tags):
+            if TagModel.query.filter(TagModel.name == tag.name).first():
+                new_post.tags.append(tag)
+            else:
+                return {'message': 'There is no such tag: \'{}\''.format(tag.name)}
+
         try:
             new_post.save_to_db()
         except SQLAlchemyError as e:
@@ -81,15 +102,16 @@ class Post(Resource):
                         required=True,
                         help='This field cannot be blank.')
 
+    parser.add_argument('tags',
+                        type=str,
+                        action='append',
+                        required=True,
+                        help='This field cannot be blank.')
+
     parser.add_argument('category_id',
                         type=int,
                         required=True,
                         help='This field cannot be blank.')
-
-    # parser.add_argument('tags',
-    #                     type=list,
-    #                     required=True,
-    #                     help='This field cannot be blank.')
 
     def put(self, _id):
         data = Post.parser.parse_args()
@@ -100,18 +122,43 @@ class Post(Resource):
         if not CM.query.filter(CM.id == category).first():
             return {'message': 'There is no such category: \'{}\''.format(category)}
 
+        tag_names = data['tags']
+        tags = []
+        for name in tag_names:
+            tag = TagModel.find_by_name(name)
+            if tag:
+                tags.append(tag)
+            else:
+                return {'message': 'There is no such tag: \'{}\''.format(name)}
+
+        del data['tags']
+
         if not post:
             post = PostModel(**data)
+            for tag in set(tags):
+                if TagModel.query.filter(TagModel.name == tag.name).first():
+                    post.tags.append(tag)
+                else:
+                    return {'message': 'There is no such tag: \'{}\''.format(tag.name)}
+
         else:
             post.title = data['title']
             post.body = data['body']
             post.user_id = data['user_id']
             post.is_published = data['is_published']
             post.category_id = category
-            # post.tags = data('tags')
-
-        post.save_to_db()
-        return post.get_json(), 200
+            post.tags = []
+            for tag in set(tags):
+                if TagModel.query.filter(TagModel.name == tag.name).first():
+                    post.tags.append(tag)
+                else:
+                    return {'message': 'There is no such tag: \'{}\''.format(tag.name)}
+        try:
+            post.save_to_db()
+        except SQLAlchemyError as e:
+            err = str(e.__class__.__name__)
+            return {'message': '{}'.format(err)}, 500
+        return post.get_json(), 201
 
 
 class PostList(Resource):
