@@ -55,7 +55,7 @@ class PostModel(db.Model):
                 'is_published': self.is_published,
                 'user_id': self.user_id,
                 # 'tags': self.tags,
-                'category': self.category_id}
+                'category_id': self.category_id}
 
     def delete_from_db(self):
         db.session.delete(self)

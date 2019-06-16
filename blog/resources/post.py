@@ -9,7 +9,7 @@ from models.post import PostModel
 
 from models.tag import TagModel
 
-from models.category import CategoryModel
+from models.category import CategoryModel as CM
 
 
 class PostRegister(Resource):
@@ -34,14 +34,22 @@ class PostRegister(Resource):
                         required=True,
                         help='This field cannot be blank.')
 
+    parser.add_argument('category_id',
+                        type=int,
+                        required=True,
+                        help='This field cannot be blank.')
+
     def post(self):
         data = PostRegister.parser.parse_args()
         if len(data['title']) > Configuration.MAX_POST_TITLE_SIZE:
             return {'message': 'A title\'s length is more than {}'.format(Configuration.MAX_POST_TITLE_SIZE)}
-
+        category = data['category_id']
+        if not CM.query.filter(CM.id == category).first():
+            return {'message': 'There is no such category: \'{}\''.format(category)}
         # for tag in data['tags']:
         #     if tag.name not in TagModel.get_tags():
         #         return {'message': 'A tag \'{}\' is unknown'.format(tag.name)}
+
         new_post = PostModel(**data)
         try:
             new_post.save_to_db()
@@ -88,12 +96,13 @@ class Post(Resource):
         post = PostModel.find_by_id(_id)
         if len(data['title']) > Configuration.MAX_POST_TITLE_SIZE:
             return {'message': 'A title\'s length is more than {}'.format(Configuration.MAX_POST_TITLE_SIZE)}
+        category = data['category_id']
+        if not CM.query.filter(CM.id == category).first():
+            return {'message': 'There is no such category: \'{}\''.format(category)}
+
         if not post:
             post = PostModel(**data)
         else:
-            category = data['category_id']
-            if not CategoryModel.query.filter(CategoryModel.id == category).first():
-                return {'message': 'There is no such category: \'{}\''.format(category)}
             post.title = data['title']
             post.body = data['body']
             post.user_id = data['user_id']
@@ -118,7 +127,6 @@ class PostList(Resource):
 
     def delete(self):
         data = PostList.parser.parse_args()
-        print(data['deleted_posts'])
         deleted_posts = []
         messages = []
         for post_id in data['deleted_posts']:
