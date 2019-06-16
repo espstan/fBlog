@@ -30,3 +30,7 @@ class CategoryModel(db.Model):
     def get_json(self):
         return {'id': self.id,
                 'name': self.name}
+
+    def delete_from_db(self):
+        db.session.delete(self)
+        db.session.commit()
