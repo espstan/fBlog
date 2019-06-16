@@ -2,8 +2,6 @@ from db import db
 
 from config import Configuration
 
-# from models.post import PostModel
-
 
 class CategoryModel(db.Model):
     __tablename__ = 'categories'
@@ -11,8 +9,8 @@ class CategoryModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(Configuration.MAX_CATEGORY_NAME_SIZE),
                      unique=True)
-    post = db.relationship('models.post.PostModel',
-                           backref='categories',
+    posts = db.relationship('models.post.PostModel',
+                           backref=db.backref('categories'),
                            lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
@@ -20,3 +18,15 @@ class CategoryModel(db.Model):
 
     def __repr__(self):
         return '<Category id: {}, name: {}>'.format(self.id, self.name)
+
+    @classmethod
+    def find_by_name(cls, name):
+        return cls.query.filter_by(name=name).first()
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def get_json(self):
+        return {'id': self.id,
+                'name': self.name}
