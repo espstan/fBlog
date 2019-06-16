@@ -13,10 +13,10 @@ class TagRegister(Resource):
         if len(name) > Configuration.MAX_TAG_NAME_SIZE:
             return {'message': 'A name\'s length is more than {}'.format(Configuration.MAX_TAG_NAME_SIZE)}
 
-        if name in TagModel.get_tags():
+        if TagModel.query.filter(TagModel.name == name).first():
             return {'message': 'Tag name already exists'}
 
-        new_tag = TagModel(name)
+        new_tag = TagModel(name=name)
         try:
             new_tag.save_to_db()
         except SQLAlchemyError as e:
