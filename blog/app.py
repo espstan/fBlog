@@ -24,8 +24,6 @@ api = Api(app)
 @app.before_first_request
 def create_tables():
     db.create_all()
-    LoadData.load_posts()
-    LoadData.load_comments()
 
 
 api.add_resource(Category, '/category/<string:name>')
