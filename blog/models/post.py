@@ -1,5 +1,3 @@
-from sqlalchemy.ext.declarative import declarative_base
-
 from config import Configuration
 
 from db import db
@@ -33,7 +31,7 @@ class PostModel(db.Model):
                             db.Integer,
                             db.ForeignKey(CategoryModel.id))
 
-    comments = db.relationship('models.post.CommentModel',
+    comments = db.relationship('models.comment.CommentModel',
                             backref=db.backref('posts'),
                             lazy='dynamic')
 
@@ -58,7 +56,8 @@ class PostModel(db.Model):
                 'is_published': self.is_published,
                 'user_id': self.user_id,
                 'tags': self.get_tags(),
-                'category_id': self.category_id}
+                'category_id': self.category_id,
+                'comments': self.get_comments()}
 
     def get_tags(self):
         return [tag.name for tag in self.tags]
