@@ -46,3 +46,8 @@ class LoadData():
                     err = str(e.__class__.__name__)
                     return {'message': '{}'.format(err)}, 500
             return "Success"
+
+
+if __name__ == '__main__':
+    LoadData.load_posts()
+    LoadData.load_comments()
