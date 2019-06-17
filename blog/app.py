@@ -12,8 +12,8 @@ from resources.post import Post
 from resources.post import PostList
 from resources.post import PostRegister
 from resources.post import PostStatistics
+from resources.tag import Tag
 from resources.tag import TagList
-from resources.tag import TagRegister
 
 
 app = Flask(__name__)
@@ -34,9 +34,8 @@ api.add_resource(Post, '/post/<int:_id>')
 api.add_resource(PostRegister, '/post')
 api.add_resource(PostList, '/posts')
 api.add_resource(PostStatistics, '/statistics')
-api.add_resource(TagRegister, '/tag/<string:name>')
+api.add_resource(Tag, '/tag')
 api.add_resource(TagList, '/tags')
-
 
 if __name__ == '__main__':
     from db import db
