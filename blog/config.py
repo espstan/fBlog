@@ -15,6 +15,6 @@ class Configuration(object):
     # category_params
     MAX_CATEGORY_NAME_SIZE = 40
     # comment_params
-    MAX_COMMENT_NAME_SIZE = 40
+    MAX_COMMENT_NAME_SIZE = 100
     # email_params
     MAX_EMAIL_ADDRESS_SIZE = 200
