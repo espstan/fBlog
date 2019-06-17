@@ -15,6 +15,8 @@ from resources.post import PostStatistics
 from resources.tag import TagList
 from resources.tag import TagRegister
 
+from load_data import LoadData
+
 app = Flask(__name__)
 app.config.from_object(Configuration)
 api = Api(app)
@@ -23,6 +25,8 @@ api = Api(app)
 @app.before_first_request
 def create_tables():
     db.create_all()
+    LoadData.load_posts()
+    LoadData.load_comments()
 
 
 api.add_resource(Category, '/category/<string:name>')
