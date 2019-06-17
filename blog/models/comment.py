@@ -33,6 +33,7 @@ class CommentModel(db.Model):
         return {'id': self.id,
                 'name': self.name,
                 'body': self.body,
+                'email': self.email,
                 'post_id': self.post_id}
 
     def delete_from_db(self):
