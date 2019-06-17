@@ -10,8 +10,7 @@ from models.category import CategoryModel
 
 post_tags = db.Table('post_tags',
                      db.Column('post_id', db.Integer, db.ForeignKey('posts.id')),
-                     db.Column('tag_id', db.Integer, db.ForeignKey(TagModel.id))
-                     )
+                     db.Column('tag_id', db.Integer, db.ForeignKey(TagModel.id)))
 
 
 class PostModel(db.Model):
@@ -33,6 +32,10 @@ class PostModel(db.Model):
     category_id = db.Column('category_id',
                             db.Integer,
                             db.ForeignKey(CategoryModel.id))
+
+    comments = db.relationship('models.post.CommentModel',
+                            backref=db.backref('posts'),
+                            lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
         super(PostModel, self).__init__(*args, **kwargs)
@@ -63,3 +66,6 @@ class PostModel(db.Model):
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
+
+    def get_comments(self):
+        return [comment.name for comment in self.comments]
