@@ -29,8 +29,12 @@ class CategoryModel(db.Model):
 
     def get_json(self):
         return {'id': self.id,
-                'name': self.name}
+                'name': self.name,
+                'posts': self.get_posts()}
 
     def delete_from_db(self):
         db.session.delete(self)
         db.session.commit()
+
+    def get_posts(self):
+        return [post.id for post in self.posts]
