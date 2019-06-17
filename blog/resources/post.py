@@ -11,6 +11,48 @@ from models.tag import TagModel
 
 from models.category import CategoryModel as CM
 
+from models.comment import CommentModel
+
+
+def get_tags(tag_names):
+    tags = []
+    for name in tag_names:
+        tag = TagModel.find_by_name(name)
+        if tag:
+            tags.append(tag)
+        else:
+            return {'message': 'There is no such tag: \'{}\''.format(name)}
+    return tags
+
+
+def get_comments(comments_id):
+    comments = []
+    for comment_id in comments_id:
+        comment = CommentModel.find_by_name(comment_id)
+        if comment:
+            comments.append(comment)
+        else:
+            return {'message': 'There is no such comment: \'{}\''.format(_id)}
+    return comments
+
+
+def get_item_tags(tags, post):
+    for tag in set(tags):
+        if TagModel.query.filter(TagModel.name == tag.name).first():
+            post.tags.append(tag)
+        else:
+            return {'message': 'There is no such tag: \'{}\''.format(tag.name)}
+    return post
+
+
+def get_item_comments(comments, post):
+    for comment in set(comments):
+        if CommentModel.query.filter(CommentModel.id == comment.id).first():
+            post.comments.append(comment)
+        else:
+            return {'message': 'There is no such comment: \'{}\''.format(comment.id)}
+    return post
+
 
 class PostRegister(Resource):
     parser = reqparse.RequestParser()
@@ -37,40 +79,49 @@ class PostRegister(Resource):
     parser.add_argument('tags',
                         type=str,
                         action='append',
-                        required=True,
-                        help='This field cannot be blank.')
+                        required=False)
 
     parser.add_argument('category_id',
                         type=int,
-                        required=True,
-                        help='This field cannot be blank.')
+                        required=False)
+
+    parser.add_argument('comments',
+                        type=int,
+                        action='append',
+                        required=False)
 
     def post(self):
         data = PostRegister.parser.parse_args()
         tag_names = data['tags']
-        tags = []
-        for name in tag_names:
-            tag = TagModel.find_by_name(name)
-            if tag:
-                tags.append(tag)
-            else:
-                return {'message': 'There is no such tag: \'{}\''.format(name)}
+        if tag_names:
+            tags = get_tags(tag_names)
+        else:
+            tags = []
 
         if len(data['title']) > Configuration.MAX_POST_TITLE_SIZE:
             return {'message': 'A title\'s length is more than {}'.format(Configuration.MAX_POST_TITLE_SIZE)}
 
         category = data['category_id']
-        if not CM.query.filter(CM.id == category).first():
-            return {'message': 'There is no such category: \'{}\''.format(category)}
+        if category:
+            if not CM.query.filter(CM.id == category).first():
+                return {'message': 'There is no such category: \'{}\''.format(category)}
+
+        comments_id = data['comments']
+        if comments_id:
+            comments = get_comments(comments_id)
+        else:
+            comments = []
 
         del data['tags']
+        del data['category_id']
+        del data['comments']
+
         new_post = PostModel(**data)
 
-        for tag in set(tags):
-            if TagModel.query.filter(TagModel.name == tag.name).first():
-                new_post.tags.append(tag)
-            else:
-                return {'message': 'There is no such tag: \'{}\''.format(tag.name)}
+        if tags:
+            new_post = get_item_tags(tags, new_post)
+        if comments:
+            new_post = get_item_comments(comments, new_post)
 
         try:
             new_post.save_to_db()
@@ -105,42 +156,49 @@ class Post(Resource):
     parser.add_argument('tags',
                         type=str,
                         action='append',
-                        required=True,
-                        help='This field cannot be blank.')
+                        required=False)
 
     parser.add_argument('category_id',
                         type=int,
-                        required=True,
-                        help='This field cannot be blank.')
+                        required=False)
+    parser.add_argument('comments',
+                        type=int,
+                        action='append',
+                        required=False)
 
     def put(self, _id):
         data = Post.parser.parse_args()
-        post = PostModel.find_by_id(_id)
+
         if len(data['title']) > Configuration.MAX_POST_TITLE_SIZE:
             return {'message': 'A title\'s length is more than {}'.format(Configuration.MAX_POST_TITLE_SIZE)}
         category = data['category_id']
-        if not CM.query.filter(CM.id == category).first():
-            return {'message': 'There is no such category: \'{}\''.format(category)}
+        if category:
+            if not CM.query.filter(CM.id == category).first():
+                return {'message': 'There is no such category: \'{}\''.format(category)}
 
         tag_names = data['tags']
-        tags = []
-        for name in tag_names:
-            tag = TagModel.find_by_name(name)
-            if tag:
-                tags.append(tag)
-            else:
-                return {'message': 'There is no such tag: \'{}\''.format(name)}
+        if tag_names:
+            tags = get_tags(tag_names)
+        else:
+            tags = []
+
+        comments_id = data['comments']
+        if comments_id:
+            comments = get_comments(comments_id)
+        else:
+            comments = []
 
         del data['tags']
+        del data['category_id']
+        del data['comments']
 
+        post = PostModel.find_by_id(_id)
         if not post:
             post = PostModel(**data)
-            for tag in set(tags):
-                if TagModel.query.filter(TagModel.name == tag.name).first():
-                    post.tags.append(tag)
-                else:
-                    return {'message': 'There is no such tag: \'{}\''.format(tag.name)}
-
+            if tags:
+                post = get_item_tags(tags, post)
+            if comments:
+                post = get_item_comments(comments, post)
         else:
             post.title = data['title']
             post.body = data['body']
@@ -148,11 +206,12 @@ class Post(Resource):
             post.is_published = data['is_published']
             post.category_id = category
             post.tags = []
-            for tag in set(tags):
-                if TagModel.query.filter(TagModel.name == tag.name).first():
-                    post.tags.append(tag)
-                else:
-                    return {'message': 'There is no such tag: \'{}\''.format(tag.name)}
+            post.comments = []
+            if tags:
+                post = get_item_tags(tags, post)
+            if comments:
+                post = get_item_comments(comments, post)
+
         try:
             post.save_to_db()
         except SQLAlchemyError as e:
