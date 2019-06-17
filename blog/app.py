@@ -8,6 +8,7 @@ from resources.category import Category
 from resources.category import CategoryList
 from resources.comment import Comment
 from resources.comment import CommentList
+from resources.comment import CommentRegistry
 from resources.post import Post
 from resources.post import PostList
 from resources.post import PostRegister
@@ -28,8 +29,9 @@ def create_tables():
 
 api.add_resource(Category, '/category/<string:name>')
 api.add_resource(CategoryList, '/categories')
-api.add_resource(Comment, '/comment/<string:name>')
+api.add_resource(Comment, '/comment')
 api.add_resource(CommentList, '/comments')
+api.add_resource(CommentRegistry, '/comment/<int:_id>')
 api.add_resource(Post, '/post/<int:_id>')
 api.add_resource(PostRegister, '/post')
 api.add_resource(PostList, '/posts')
