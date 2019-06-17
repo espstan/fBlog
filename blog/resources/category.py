@@ -10,13 +10,32 @@ from models.category import CategoryModel as CM
 from models.post import PostModel as PM
 
 
+def get_posts(posts_id):
+    posts = []
+    for _id in posts_id:
+        post = PM.find_by_id(_id)
+        if post:
+            posts.append(post)
+        else:
+            return {'message': 'There is no such post: \'{}\''.format(_id)}
+    return posts
+
+
+def add_posts(new_category, posts):
+    for post in set(posts):
+        if PM.query.filter(PM.id == post.id).first():
+            new_category.posts.append(post)
+        else:
+            return {'message': 'There is no such post: \'{}\''.format(post.id)}
+    return new_category
+
+
 class Category(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('posts',
                         type=int,
                         action='append',
-                        required=True,
-                        help='This field cannot be blank.')
+                        required=False)
 
     def post(self, name):
         if name:
@@ -28,27 +47,20 @@ class Category(Resource):
 
         data = Category.parser.parse_args()
         posts_id = data['posts']
-        posts = []
-        for _id in posts_id:
-            post = PM.find_by_id(_id)
-            if post:
-                posts.append(post)
-            else:
-                return {'message': 'There is no such post: \'{}\''.format(_id)}
+        if posts_id:
+            posts = get_posts(posts_id)
+        else:
+            posts = []
 
-        new_category = CM(name=name)
-
-        for post in set(posts):
-            if PM.query.filter(PM.id == post.id).first():
-                new_category.posts.append(post)
-            else:
-                return {'message': 'There is no such post: \'{}\''.format(post.id)}
+        category = CM(name=name)
+        if posts:
+            category = add_posts(category, posts)
         try:
-            new_category.save_to_db()
+            category.save_to_db()
         except SQLAlchemyError as e:
             err = str(e.__class__.__name__)
             return {'message': '{}'.format(err)}, 500
-        return new_category.get_json(), 201
+        return category.get_json(), 201
 
     def delete(self, name):
         category = CM.find_by_name(name)
@@ -68,13 +80,10 @@ class Category(Resource):
             return {'message': 'A name\'s length is more than {}'.format(Configuration.MAX_CATEGORY_NAME_SIZE)}
 
         posts_id = data['posts']
-        posts = []
-        for _id in posts_id:
-            post = PM.find_by_id(_id)
-            if post:
-                posts.append(post)
-            else:
-                return {'message': 'There is no such post: \'{}\''.format(_id)}
+        if posts_id:
+            posts = get_posts(posts_id)
+        else:
+            posts = []
 
         category = CM.find_by_name(name)
         if not category:
@@ -83,11 +92,9 @@ class Category(Resource):
             category.name = name
 
         category.posts = []
-        for post in set(posts):
-            if PM.query.filter(PM.id == post.id).first():
-                category.posts.append(post)
-            else:
-                return {'message': 'There is no such post: \'{}\''.format(post.id)}
+
+        if posts:
+            category = add_posts(category, posts)
 
         try:
             category.save_to_db()
