@@ -10,8 +10,8 @@ class CategoryModel(db.Model):
     name = db.Column(db.String(Configuration.MAX_CATEGORY_NAME_SIZE),
                      unique=True)
     posts = db.relationship('models.post.PostModel',
-                           backref=db.backref('categories'),
-                           lazy='dynamic')
+                            backref=db.backref('categories'),
+                            lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
         super(CategoryModel, self).__init__(*args, **kwargs)
