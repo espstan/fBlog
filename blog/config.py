@@ -14,3 +14,7 @@ class Configuration(object):
     MAX_TAG_NAME_SIZE = 40
     # category_params
     MAX_CATEGORY_NAME_SIZE = 40
+    # comment_params
+    MAX_COMMENT_NAME_SIZE = 40
+    # email_params
+    MAX_EMAIL_ADDRESS_SIZE = 200
