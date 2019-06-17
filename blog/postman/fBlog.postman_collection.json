@@ -1,0 +1,490 @@
+{
+	"info": {
+		"_postman_id": "00bfb679-288a-48ff-84c0-0dd95f781cfd",
+		"name": "fBlog",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Show all posts",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/posts",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"posts"
+					]
+				},
+				"description": "Листинг постов"
+			},
+			"response": []
+		},
+		{
+			"name": "Show posts' statistics",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/statistics",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"statistics"
+					]
+				},
+				"description": "Статистика по постам"
+			},
+			"response": []
+		},
+		{
+			"name": "Create new post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"new title\",\n\t\"body\": \"new body\",\n\t\"user_id\": 1,\n\t\"is_published\": true,\n\t\"tags\": [2],\n\t\"category_id\": 3,\n\t\"comments\": []\n}"
+				},
+				"url": {
+					"raw": "{{url}}/post",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"post"
+					]
+				},
+				"description": "Создать новый пост "
+			},
+			"response": []
+		},
+		{
+			"name": "Create new post/update existing post",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"New Edited title\",\n\t\"body\": \"New edited body\",\n\t\"user_id\": 122,\n\t\"is_published\": false,\n\t\"tags\": [\"new\"],\n\t\"category_id\": null,\n\t\"comments\": []\n}"
+				},
+				"url": {
+					"raw": "{{url}}/post/1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"post",
+						"1"
+					]
+				},
+				"description": "Создать новый пост или обновить существующий"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete posts",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"deleted_posts\": [1,2,3]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/posts",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"posts"
+					]
+				},
+				"description": "Удалить посты по id"
+			},
+			"response": []
+		},
+		{
+			"name": "Show all tags",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/tags",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tags"
+					]
+				},
+				"description": "Отобразить список всех тегов"
+			},
+			"response": []
+		},
+		{
+			"name": "Create new tag",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"#python\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/tag",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tag"
+					]
+				},
+				"description": "Создать новый пост "
+			},
+			"response": []
+		},
+		{
+			"name": "Create new tag/update existing tag",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"dsgfhsfwf\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/tag",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tag"
+					]
+				},
+				"description": "Создать новый тег или обновить существующий"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete tag",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"java\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/tag",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tag"
+					]
+				},
+				"description": "Удалить тег"
+			},
+			"response": []
+		},
+		{
+			"name": "Show all categories",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/categories",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"categories"
+					]
+				},
+				"description": "Отобразить список всех категорий"
+			},
+			"response": []
+		},
+		{
+			"name": "Create new category by name",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"posts\": [5,67]\n}"
+				},
+				"url": {
+					"raw": "{{url}}/category/juwel",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"category",
+						"juwel"
+					]
+				},
+				"description": "Создать новую категорию "
+			},
+			"response": []
+		},
+		{
+			"name": "Create new|Update existing category",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"posts\": []\n}"
+				},
+				"url": {
+					"raw": "{{url}}/category/swap",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"category",
+						"swap"
+					]
+				},
+				"description": "Создать новую или обновить существующую категорию"
+			},
+			"response": []
+		},
+		{
+			"name": "delete category by name",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/category/science",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"category",
+						"science"
+					]
+				},
+				"description": "Создать новый пост "
+			},
+			"response": []
+		},
+		{
+			"name": "Show all comments",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/comments",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"comments"
+					]
+				},
+				"description": "Отобразить список всех комментариев"
+			},
+			"response": []
+		},
+		{
+			"name": "Create new comment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"comment with surprice\",\n\t\"body\":\"body of the comment\",\n\t\"email\": \"vasya@gmail.com\",\n\t\"post_id\": 4\n}"
+				},
+				"url": {
+					"raw": "{{url}}/comment",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"comment"
+					]
+				},
+				"description": "Создать коментарий к посту"
+			},
+			"response": []
+		},
+		{
+			"name": "Create new| Update existing comment",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{            \"name\": \"1500\",\n            \"body\": \"bo0000000000000000000000000000000000000of the commebody of the commebody of the commebody of the commebody of the commebody of the commebody of the commebody of the commebody of the commebody of the commebody of the comment\",\n            \"email\": \"fw000000000000000000000000000000sf\",\n            \"post_id\": 6667\n}"
+				},
+				"url": {
+					"raw": "{{url}}/comment/1505",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"comment",
+						"1505"
+					]
+				},
+				"description": "Обновить существующую категорию"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete comment by id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/comment/1499",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"comment",
+						"1499"
+					]
+				},
+				"description": "Создать новый пост "
+			},
+			"response": []
+		}
+	]
+}
